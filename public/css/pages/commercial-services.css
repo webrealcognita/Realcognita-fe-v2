@@ -1,0 +1,328 @@
+/* ==========================================================================
+   REALCOGNITA — PREMIUM ENHANCEMENTS
+   Load order: main.css -> inner-pages.css -> premium-enhancements.css
+   Purpose: sector-tinted hero treatments, animated reveals, and premium
+   micro-interactions for the commercial & residential service pages.
+   Every rule here is additive (no overrides of core layout) so it is safe
+   to include on any page that already uses main.css / inner-pages.css.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   0. MOTION TOKENS
+   -------------------------------------------------------------------------- */
+:root {
+  --res: #60a5fa;
+  --res-soft: rgba(96, 165, 250, 0.14);
+  --pe-ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   1. SECTOR-TINTED HERO (fills in the previously-unstyled
+      .page-hero--comm / .page-hero--res modifiers)
+   -------------------------------------------------------------------------- */
+.page-hero--comm,
+.page-hero--res {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.page-hero--comm::before,
+.page-hero--res::before {
+  content: "";
+  position: absolute;
+  inset: -20% -10%;
+  z-index: -2;
+  background:
+    radial-gradient(38% 55% at 82% 12%, var(--pe-tint-soft, var(--comm-soft)) 0%, transparent 70%),
+    radial-gradient(30% 45% at 8% 92%, var(--pe-tint-soft, var(--comm-soft)) 0%, transparent 70%);
+  animation: peDrift 22s var(--pe-ease) infinite alternate;
+}
+
+.page-hero--comm::after,
+.page-hero--res::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.5;
+  mask-image: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, transparent 85%);
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, transparent 85%);
+  background-image: linear-gradient(rgba(var(--color-accent-rgb), 0.06) 1px, transparent 1px),
+                     linear-gradient(90deg, rgba(var(--color-accent-rgb), 0.06) 1px, transparent 1px);
+  background-size: 46px 46px;
+  animation: peGridPan 60s linear infinite;
+}
+
+.page-hero--comm { --pe-tint-soft: var(--comm-soft); }
+.page-hero--res  { --pe-tint-soft: var(--res-soft); }
+
+@keyframes peDrift {
+  0%   { transform: translate3d(0, 0, 0) scale(1); }
+  100% { transform: translate3d(-2%, 2%, 0) scale(1.06); }
+}
+@keyframes peGridPan {
+  0%   { background-position: 0 0, 0 0; }
+  100% { background-position: 46px 92px, 46px 92px; }
+}
+
+/* Hero copy: staggered entrance instead of a single flat fade */
+.page-hero--comm .page-hero-title,
+.page-hero--res .page-hero-title {
+  opacity: 0;
+  animation: peRiseIn 0.9s var(--pe-ease) 0.05s forwards;
+}
+.page-hero--comm .page-hero-desc,
+.page-hero--res .page-hero-desc {
+  opacity: 0;
+  animation: peRiseIn 0.9s var(--pe-ease) 0.22s forwards;
+}
+.page-hero--comm .btn-hero,
+.page-hero--res .btn-hero {
+  opacity: 0;
+  animation: peRiseIn 0.9s var(--pe-ease) 0.38s forwards;
+}
+
+@keyframes peRiseIn {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Animated accent underline beneath the highlighted hero word */
+.page-hero-title .accent {
+  position: relative;
+  display: inline-block;
+}
+.page-hero-title .accent::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -0.06em;
+  height: 0.09em;
+  width: 100%;
+  background: currentColor;
+  opacity: 0.35;
+  border-radius: 2px;
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: peUnderline 0.7s var(--pe-ease) 0.6s forwards;
+}
+@keyframes peUnderline {
+  to { transform: scaleX(1); }
+}
+
+/* --------------------------------------------------------------------------
+   2. BUTTON POLISH — sheen sweep on primary CTAs
+   -------------------------------------------------------------------------- */
+.btn-hero,
+.btn-contact,
+.explore-btn {
+  position: relative;
+  overflow: hidden;
+}
+.btn-hero::before,
+.btn-contact::before,
+.explore-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -60%;
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(115deg, transparent 0%, rgba(255,255,255,0.35) 50%, transparent 100%);
+  transform: skewX(-20deg);
+  transition: left 0.65s var(--pe-ease);
+  pointer-events: none;
+}
+.btn-hero:hover::before,
+.btn-contact:hover::before,
+.explore-btn:hover::before {
+  left: 130%;
+}
+
+/* --------------------------------------------------------------------------
+   3. SECTION TITLE ACCENT — small drawn-in rule beside section titles
+   -------------------------------------------------------------------------- */
+.section-header .section-title,
+.value-intro .section-title,
+.group-header .section-title {
+  position: relative;
+  padding-left: 18px;
+}
+.section-header .section-title::before,
+.value-intro .section-title::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.18em;
+  bottom: 0.18em;
+  width: 3px;
+  border-radius: 2px;
+  background: var(--color-accent);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 0.6s var(--pe-ease);
+}
+.reveal-item.is-visible .section-title::before {
+  transform: scaleY(1);
+}
+
+/* --------------------------------------------------------------------------
+   4. VALUE PILLS — staggered entrance + hover lift/shimmer
+   -------------------------------------------------------------------------- */
+.pill-list .value-pill {
+  transition: transform 0.35s var(--pe-ease), box-shadow 0.35s var(--pe-ease),
+              background-color 0.35s var(--pe-ease);
+}
+.pill-list.reveal-item .value-pill {
+  opacity: 0;
+  transform: translateY(10px) scale(0.96);
+  transition: opacity 0.5s var(--pe-ease), transform 0.5s var(--pe-ease);
+}
+.pill-list.reveal-item.is-visible .value-pill {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+.pill-list .value-pill:nth-child(1) { transition-delay: 0.04s; }
+.pill-list .value-pill:nth-child(2) { transition-delay: 0.10s; }
+.pill-list .value-pill:nth-child(3) { transition-delay: 0.16s; }
+.pill-list .value-pill:nth-child(4) { transition-delay: 0.22s; }
+.pill-list .value-pill:nth-child(5) { transition-delay: 0.28s; }
+.pill-list .value-pill:nth-child(6) { transition-delay: 0.34s; }
+
+.value-pill:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px -8px rgba(var(--color-accent-rgb), 0.45);
+}
+
+/* --------------------------------------------------------------------------
+   5. SERVICE DETAIL ROWS — alternating slide-reveal + image sheen sweep
+   -------------------------------------------------------------------------- */
+.service-detail-row.reveal-item {
+  transition: opacity 0.75s var(--pe-ease), transform 0.75s var(--pe-ease);
+}
+.service-detail-row.reveal-item:not(.service-detail-row--flip) {
+  transform: translateX(-36px) translateY(0);
+}
+.service-detail-row--flip.reveal-item {
+  transform: translateX(36px) translateY(0);
+}
+.service-detail-row.reveal-item.is-visible {
+  transform: translateX(0);
+}
+
+.service-detail-img { position: relative; }
+.service-detail-img::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 40%, rgba(255,255,255,0.28) 50%, transparent 60%);
+  transform: translateX(-120%);
+  transition: transform 0.75s var(--pe-ease);
+  pointer-events: none;
+}
+.service-detail-row:hover .service-detail-img::after {
+  transform: translateX(120%);
+}
+
+/* Checklist items: quick staggered check-in */
+.detail-checklist li {
+  opacity: 0;
+  transform: translateX(-8px);
+  transition: opacity 0.45s var(--pe-ease), transform 0.45s var(--pe-ease);
+}
+.reveal-item.is-visible .detail-checklist li {
+  opacity: 1;
+  transform: translateX(0);
+}
+.detail-checklist li:nth-child(1) { transition-delay: 0.1s; }
+.detail-checklist li:nth-child(2) { transition-delay: 0.2s; }
+.detail-checklist li:nth-child(3) { transition-delay: 0.3s; }
+
+.detail-checklist li::before {
+  transition: transform 0.3s var(--pe-ease), box-shadow 0.3s var(--pe-ease);
+}
+.service-detail-row:hover .detail-checklist li::before {
+  transform: scale(1.35);
+  box-shadow: 0 0 0 4px rgba(var(--color-accent-rgb), 0.18);
+}
+
+/* --------------------------------------------------------------------------
+   6. FAQ — refined hover/active states
+   -------------------------------------------------------------------------- */
+.faq-item {
+  transition: border-color 0.3s var(--pe-ease), box-shadow 0.3s var(--pe-ease), transform 0.3s var(--pe-ease);
+}
+.faq-item:hover {
+  transform: translateY(-2px);
+}
+.faq-item.open {
+  border-color: rgba(var(--color-accent-rgb), 0.35);
+  box-shadow: 0 10px 28px -14px rgba(var(--color-accent-rgb), 0.35);
+}
+.faq-icon {
+  transition: transform 0.4s var(--pe-ease), color 0.3s var(--pe-ease);
+}
+.faq-item.open .faq-question { color: var(--color-accent); }
+
+/* --------------------------------------------------------------------------
+   7. CTA BANNER — animated gradient border glow
+   -------------------------------------------------------------------------- */
+.inner-cta-box {
+  position: relative;
+}
+.inner-cta-box::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(from var(--peAngle, 0deg),
+              rgba(var(--color-accent-rgb), 0.7), transparent 30%,
+              transparent 60%, rgba(var(--color-accent-rgb), 0.7));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: peSpin 7s linear infinite;
+  opacity: 0.6;
+}
+@keyframes peSpin {
+  to { --peAngle: 360deg; }
+}
+@property --peAngle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+/* --------------------------------------------------------------------------
+   8. IMAGE FRAMES ELSEWHERE ON INNER PAGES (reveal split layout, sector cards)
+   -------------------------------------------------------------------------- */
+.reveal-image-frame,
+.sector-img-wrap {
+  position: relative;
+}
+.reveal-image-frame::after,
+.sector-img-wrap::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 40%, rgba(255,255,255,0.25) 50%, transparent 60%);
+  transform: translateX(-120%);
+  transition: transform 0.75s var(--pe-ease);
+  pointer-events: none;
+}
+.reveal-image-frame:hover::after,
+.sector-card:hover .sector-img-wrap::after {
+  transform: translateX(120%);
+}

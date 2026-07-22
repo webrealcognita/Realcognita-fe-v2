@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+  Tailwind is layered UNDER the original hand-written CSS (main.css,
+  inner-pages.css, premium-enhancements.css, css/pages/*.css — all linked
+  in app/layout.js), so the existing design system keeps full authority
+  and Tailwind utility classes remain available for any new work.
+*/

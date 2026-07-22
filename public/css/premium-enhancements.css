@@ -1,0 +1,559 @@
+/* ==========================================================================
+   REALCOGNITA — PREMIUM ENHANCEMENT LAYER
+   Loaded on every page, after main.css / inner-pages.css / css/pages/*.css.
+   Purpose: unify visual polish site-wide (depth, motion, focus, scrollbars)
+   and upgrade the dark/light theme switcher — WITHOUT introducing any new
+   brand colors. Every rule below reads the same --color-* / --radius-* /
+   --ease-* custom properties already defined in css/main.css, so it just
+   raises the finish of the existing design system rather than replacing it.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. GLOBAL FEEL: smoother theme swaps, refined selection & scrollbars
+   -------------------------------------------------------------------------- */
+html {
+  scrollbar-color: rgba(var(--ink-rgb), 0.28) transparent;
+}
+
+::selection {
+  background: var(--color-accent-dim);
+  color: var(--color-text);
+}
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgba(var(--ink-rgb), 0.22);
+  border-radius: 999px;
+  border: 2px solid var(--color-bg);
+}
+::-webkit-scrollbar-thumb:hover { background: rgba(var(--ink-rgb), 0.36); }
+
+/* Crossfade every themeable surface smoothly while a manual toggle is in
+   flight, without permanently taxing scroll/hover performance. theme.js
+   adds/removes this class for ~400ms around the click. */
+html.theme-transitioning,
+html.theme-transitioning *,
+html.theme-transitioning *::before,
+html.theme-transitioning *::after {
+  transition: background-color 0.45s var(--ease-out),
+              border-color 0.45s var(--ease-out),
+              color 0.45s var(--ease-out),
+              box-shadow 0.45s var(--ease-out),
+              fill 0.45s var(--ease-out),
+              stroke 0.45s var(--ease-out) !important;
+}
+
+/* Consistent, brand-colored keyboard focus ring everywhere (buttons, links,
+   cards) instead of the mismatched browser default. */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+/* Removes the default gray flash Android/iOS paints on tap for interactive
+   elements — the custom focus ring and hover states above already give
+   clear feedback, so the native highlight just looks like a rendering
+   glitch on top of them. */
+a, button, [role="button"], .card, .service-card, .sector-card,
+.news-card, .feature-card, .office-card, .case-card, .value-card,
+.team-card, .stat-card {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* --------------------------------------------------------------------------
+   2. TYPOGRAPHY & SURFACE POLISH
+   -------------------------------------------------------------------------- */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "kern" 1, "liga" 1;
+}
+
+h1, h2, h3 { text-wrap: balance; }
+
+/* Any card-like surface across pages gets a slightly richer, layered
+   shadow + a soft brand-tinted ring on hover — reads as "premium" without
+   touching a single color value. */
+.card,
+.service-card,
+.sector-card,
+.news-card,
+.feature-card,
+.office-card,
+.case-card,
+.value-card,
+.team-card,
+.stat-card {
+  transition: transform 0.45s var(--ease-out),
+              box-shadow 0.45s var(--ease-out),
+              border-color 0.45s var(--ease-out);
+}
+
+.card:hover,
+.service-card:hover,
+.sector-card:hover,
+.news-card:hover,
+.feature-card:hover,
+.office-card:hover,
+.case-card:hover,
+.value-card:hover,
+.team-card:hover,
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 24px 48px -20px rgba(var(--ink-rgb), 0.22),
+              0 0 0 1px rgba(var(--color-accent-rgb), 0.12);
+}
+
+/* Touchscreens fire :hover on tap and then hold it until the next tap
+   elsewhere, which reads as a stuck/glitchy card. Devices with a real
+   pointer (mouse/trackpad) keep the lift; touch devices just get the
+   resting state plus their own :active feedback below. */
+@media (hover: none) {
+  .card:hover,
+  .service-card:hover,
+  .sector-card:hover,
+  .news-card:hover,
+  .feature-card:hover,
+  .office-card:hover,
+  .case-card:hover,
+  .value-card:hover,
+  .team-card:hover,
+  .stat-card:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .card:active,
+  .service-card:active,
+  .sector-card:active,
+  .news-card:active,
+  .feature-card:active,
+  .office-card:active,
+  .case-card:active,
+  .value-card:active,
+  .team-card:active,
+  .stat-card:active {
+    transform: scale(0.98);
+  }
+}
+
+/* Primary CTA gets a subtle sheen sweep + deeper resting shadow */
+.btn-contact,
+.drawer-cta,
+.btn-primary {
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 24px -8px rgba(var(--color-accent-rgb), 0.45);
+}
+
+.btn-contact::before,
+.drawer-cta::before,
+.btn-primary::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 20%, rgba(255, 255, 255, 0.35) 40%, transparent 60%);
+  transform: translateX(-120%);
+  transition: transform 0.6s var(--ease-out);
+  pointer-events: none;
+}
+
+.btn-contact:hover::before,
+.drawer-cta:hover::before,
+.btn-primary:hover::before {
+  transform: translateX(120%);
+}
+
+.btn-contact:hover,
+.drawer-cta:hover,
+.btn-primary:hover {
+  box-shadow: 0 14px 32px -8px rgba(var(--color-accent-rgb), 0.55);
+  transform: translateY(-2px);
+}
+
+@media (hover: none) {
+  .btn-contact:hover::before,
+  .drawer-cta:hover::before,
+  .btn-primary:hover::before {
+    transform: translateX(-120%);
+  }
+
+  .btn-contact:hover,
+  .drawer-cta:hover,
+  .btn-primary:hover {
+    box-shadow: 0 10px 24px -8px rgba(var(--color-accent-rgb), 0.45);
+    transform: none;
+  }
+
+  .btn-contact:active,
+  .drawer-cta:active,
+  .btn-primary:active {
+    transform: scale(0.97);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   3. THEME TOGGLE — refined, premium switch styling
+   Markup/IDs unchanged (#themeToggleBtn / #drawerThemeToggleBtn, .icon-sun /
+   .icon-moon) — this only upgrades the finish: more depth, a soft brand-
+   tinted focus/hover halo, and a matched crossfade for both icons.
+   -------------------------------------------------------------------------- */
+.theme-toggle-btn {
+  position: relative;
+  box-shadow: 0 1px 2px rgba(var(--ink-rgb), 0.06),
+              inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.theme-toggle-btn::after {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(var(--color-accent-rgb), 0.28), transparent 72%);
+  opacity: 0;
+  transform: scale(0.6);
+  transition: opacity 0.35s var(--ease-out), transform 0.35s var(--ease-out);
+  pointer-events: none;
+}
+
+.theme-toggle-btn:hover,
+.theme-toggle-btn:focus-visible {
+  border-color: var(--color-accent);
+  background: var(--color-accent-dim);
+  box-shadow: 0 6px 18px -6px rgba(var(--color-accent-rgb), 0.45),
+              inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.theme-toggle-btn:hover::after,
+.theme-toggle-btn:focus-visible::after {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.theme-toggle-btn:active {
+  transform: scale(0.92);
+}
+
+@media (hover: none) {
+  .theme-toggle-btn:hover {
+    border-color: inherit;
+    background: inherit;
+    box-shadow: 0 1px 2px rgba(var(--ink-rgb), 0.06),
+                inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  }
+
+  .theme-toggle-btn:hover::after {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+}
+
+.theme-toggle-btn svg {
+  position: relative;
+  z-index: 1;
+}
+
+/* Symmetric, matched crossfade for both icons (previously only the moon
+   animated in; the sun now mirrors it so the swap feels intentional in
+   both directions). */
+.theme-toggle-btn .icon-sun,
+.theme-toggle-btn .icon-moon {
+  transition: opacity 0.3s var(--ease-out), transform 0.45s var(--ease-out);
+}
+
+.theme-toggle-btn .icon-sun {
+  animation: theme-icon-pop 0.4s var(--ease-out);
+}
+
+@keyframes theme-icon-pop {
+  from { transform: scale(0.5) rotate(45deg); opacity: 0; }
+  to   { transform: scale(1) rotate(0); opacity: 1; }
+}
+
+/* Drawer row: give the label + switch a proper card-like housing so it
+   reads as one cohesive control rather than a bare button next to text. */
+.drawer-theme-row {
+  box-shadow: inset 0 0 0 1px var(--color-border);
+  transition: box-shadow 0.3s var(--ease-out);
+}
+
+.drawer-theme-row:hover {
+  box-shadow: inset 0 0 0 1px rgba(var(--color-accent-rgb), 0.4);
+}
+
+.drawer-theme-row .theme-toggle-btn {
+  background: var(--color-bg);
+}
+
+/* --------------------------------------------------------------------------
+   4. MOTION SAFETY
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  html.theme-transitioning,
+  html.theme-transitioning *,
+  html.theme-transitioning *::before,
+  html.theme-transitioning *::after {
+    transition: none !important;
+  }
+
+  .theme-toggle-btn .icon-sun,
+  .theme-toggle-btn .icon-moon,
+  .card, .service-card, .sector-card, .news-card, .feature-card,
+  .office-card, .case-card, .value-card, .team-card, .stat-card {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ==========================================================================
+   5. MOBILE FUNCTIONALITY & LAYOUT FIXES
+   No new colors/brand values introduced — this section only corrects
+   sizing, overflow, stacking and tap-target issues that surface on small
+   viewports. Every rule is additive and scoped with media queries so
+   desktop/tablet layouts are untouched.
+   ========================================================================== */
+
+/* 5.1 — Hard guard against horizontal scroll caused by any oversized child
+   (fixed-width decorative blocks, wide grids, long unbroken strings). */
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Long unbroken strings (emails, URLs, long product/company names) can
+   force the page wider than the viewport on small phones. */
+h1, h2, h3, h4, h5, h6, p, a, span, li {
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+/* 5.2 — iOS Safari auto-zooms the whole page when a focused input's
+   font-size is below 16px. The contact form fields use 0.9rem (~14.4px),
+   which triggers that zoom. Bump to 16px only at mobile widths so the
+   desktop type scale is unaffected. */
+@media (max-width: 768px) {
+  .field-input,
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* 5.3 — Auto-fit grids whose minimum track (300px) is wider than a small
+   phone's usable width (320px screen minus container padding) will force
+   a horizontal scrollbar instead of collapsing to one column. */
+@media (max-width: 380px) {
+  .services-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 5.4 — Two-column "roster" style rows (fixed 140px photo column) get too
+   cramped once padding is subtracted from very small viewports; stack
+   them like the rest of the site's card layouts do below 768px. */
+@media (max-width: 480px) {
+  .roster-panel-inner {
+    grid-template-columns: 1fr;
+  }
+  .roster-photo {
+    max-width: 200px;
+  }
+}
+
+/* 5.5 — Large, fixed (non-clamped) headline sizes in the client-ticker /
+   collaboration section can look oversized and crowd the header row on
+   phones; scale them down in step with the rest of the responsive type. */
+@media (max-width: 768px) {
+  .testimonial-header .collaboration-title {
+    font-size: clamp(1.75rem, 8vw, 2.5rem);
+  }
+  .testimonial-header .header-right {
+    max-width: 100%;
+  }
+}
+
+/* 5.6 — Ensure small icon-only controls meet the ~44x44px minimum tap
+   target recommended for touch, without changing how they look. Uses an
+   invisible expanded hit-area instead of resizing the visible icon. */
+@media (max-width: 1024px) {
+  .hamburger {
+    position: relative;
+  }
+  .hamburger::after {
+    content: "";
+    position: absolute;
+    inset: -13px -10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .modal-close {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+/* 5.7 — Contact modal padding is generous (2.5rem) which eats a lot of
+   the usable width on small phones; tighten it responsively so form
+   fields get more breathing room without changing the desktop design. */
+@media (max-width: 640px) {
+  .modal-window {
+    padding: 1.5rem;
+    border-radius: var(--radius-md);
+  }
+  .modal-overlay {
+    padding: 1rem;
+  }
+}
+
+/* 5.8 — Respect notches / home-indicator areas for fixed UI so controls
+   never sit under the OS gesture bar on modern phones. */
+@media (max-width: 768px) {
+  .mobile-drawer {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .scroll-top-btn {
+    bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+  }
+  .chatbot-launcher {
+    bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+/* 5.9 — Prevent any element carrying an explicit fixed pixel width from
+   exceeding the viewport on very narrow phones. */
+@media (max-width: 480px) {
+  img, video, iframe, svg, table {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+/* ==========================================================================
+   6. SCROLL-AWARE FLOATING CONTROLS
+   Scroll-to-top and the chat launcher share one bottom-right "zone":
+   scrolling down reveals scroll-to-top, scrolling up reveals the chat
+   launcher instead. chatbot.js toggles the shared .is-visible class on
+   both buttons in direct response to scroll direction; this layer only
+   defines what "hidden" / "visible" looks like so the swap can fade and
+   slide instead of snapping, matching the chatbot launcher's own motion.
+   ========================================================================== */
+.scroll-top-btn {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(16px) scale(0.85);
+}
+
+.scroll-top-btn.is-visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+}
+
+/* Safety net: if an older page still ships the static `hidden` attribute
+   instead of JS-driven classes, don't let it hard-hide the button behind
+   display:none — let opacity/visibility above govern it instead. */
+.scroll-top-btn[hidden] { display: flex !important; }
+
+/* Stop the "new message" pulse ring once the visitor has opened the chat
+   at least once (mirrors the badge's own was-opened behavior) so the
+   launcher settles down instead of pulsing indefinitely every session. */
+.chatbot-launcher.was-opened::after {
+  animation: none;
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-top-btn,
+  .chatbot-launcher {
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Inline follow-up suggestion chips rendered inside the chat transcript
+   after a bot reply. Deliberately reuses .chatbot-quick-btn's pill look
+   (same colors/shape) so no new visual language is introduced — just a
+   smaller, in-flow variant. */
+.chatbot-msg-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  max-width: 88%;
+  align-self: flex-start;
+  margin-top: -4px;
+  animation: chatbot-msg-in 0.3s var(--ease-out);
+}
+
+.chatbot-msg-chips .chatbot-quick-btn {
+  font-size: 0.72rem;
+  padding: 0.35rem 0.7rem;
+}
+
+.chatbot-msg.system {
+  align-self: center;
+  background: transparent;
+  color: var(--color-text-dim, var(--color-text));
+  font-size: 0.72rem;
+  text-align: center;
+  padding: 0.2rem 0.5rem;
+  opacity: 0.75;
+}
+
+/* --------------------------------------------------------------------------
+   7. CTA BANNER — DARK MODE POLISH
+   Reuses existing --ink-rgb / --color-* tokens; no new brand colors.
+   -------------------------------------------------------------------------- */
+[data-theme="dark"] .cta-glow {
+  opacity: 0.22;
+}
+
+[data-theme="dark"] .cta-glow-b {
+  opacity: 0.16;
+}
+
+[data-theme="dark"] .cta-card {
+  box-shadow: 0 20px 45px -20px rgba(0, 0, 0, 0.55),
+              inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+[data-theme="dark"] .cta-card:hover {
+  box-shadow: 0 26px 55px -18px rgba(0, 0, 0, 0.6),
+              inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .btn-submit:hover:not(:disabled) {
+  box-shadow: 0 8px 20px -6px rgba(var(--color-accent-rgb), 0.35);
+}
+
+[data-theme="dark"] .region-menu {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+}
+
+/* --------------------------------------------------------------------------
+   8. "SOFTWARE WE WORK IN" — DARK MODE LOGO VISIBILITY
+   The multiply blend mode needs a light backdrop to read correctly;
+   swap in a white card behind brand logos when dark mode is active.
+   -------------------------------------------------------------------------- */
+[data-theme="dark"] .sw-frame--logo {
+  background-color: #ffffff;
+  border-radius: 12px;
+}
+
+[data-theme="dark"] .sw-frame--logo .sw-showcase-img {
+  mix-blend-mode: normal;
+  filter: none;
+  padding: 24px;
+  width: calc(100% - 48px);
+  height: calc(100% - 48px);
+}

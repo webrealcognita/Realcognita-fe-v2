@@ -1,0 +1,268 @@
+/* ==========================================================================
+   REALCOGNITA — TESTIMONIALS PAGE STYLES
+   Depends on: css/main.css, css/inner-pages.css (must load first)
+   Reuses existing site components verbatim where possible:
+   .page-hero / .section-tag-label (inner-pages.css + main.css),
+   .collaboration-section / .testimonial-slider-block (main.css),
+   .discipline-tag filter pills (inner-pages.css), .btn-hero (inner-pages.css)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. PAGE HERO
+   -------------------------------------------------------------------------- */
+.testi-hero {
+  position: relative;
+  overflow: hidden;
+  transition: background-color 0.35s var(--ease-out);
+}
+
+.testi-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.5;
+  background-image:
+    linear-gradient(90deg, rgba(var(--ink-rgb), 0.08) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(var(--ink-rgb), 0.08) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.6), transparent 75%);
+}
+
+.testi-hero .container { position: relative; z-index: 2; }
+
+.testi-hero-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2.5rem;
+  margin-top: 0.5rem;
+}
+
+.testi-hero-stat { display: flex; flex-direction: column; gap: 4px; }
+
+.testi-hero-stat b {
+  font-size: clamp(1.6rem, 2.6vw, 2.1rem);
+  font-weight: 800;
+  color: var(--color-text);
+  letter-spacing: -0.02em;
+}
+
+.testi-hero-stat span {
+  font-size: 0.76rem;
+  color: var(--color-text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* --------------------------------------------------------------------------
+   2. FILTER BAR
+   Reuses .discipline-tag pill styling from inner-pages.css so filters look
+   identical to the ones on the team page.
+   -------------------------------------------------------------------------- */
+.testi-filter-section { padding: 8px 0 0; }
+
+.testi-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding-bottom: 32px;
+}
+
+.testi-filter-count {
+  margin-left: auto;
+  font-size: 0.82rem;
+  color: var(--color-text-dim);
+  align-self: center;
+}
+
+/* --------------------------------------------------------------------------
+   3. TESTIMONIALS GRID + CARDS
+   -------------------------------------------------------------------------- */
+.testi-grid-section { padding: 0 0 var(--section-gap); }
+
+.testi-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 26px;
+}
+
+.testimonial-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 18px;
+  padding: 30px 28px 26px;
+  transition: background-color 0.35s var(--ease-out), border-color 0.45s var(--ease-out);
+}
+
+.testimonial-card.is-hidden { display: none; }
+
+.testimonial-card .quote-mark {
+  width: 34px;
+  height: 34px;
+  color: var(--color-accent);
+  opacity: 0.35;
+}
+
+.testimonial-card .card-rating {
+  display: flex;
+  gap: 3px;
+  color: var(--color-accent);
+}
+.testimonial-card .card-rating svg { width: 15px; height: 15px; }
+
+.testimonial-card .card-quote {
+  font-size: 0.98rem;
+  line-height: 1.7;
+  color: var(--color-text);
+  flex: 1;
+}
+
+.testimonial-card .card-footer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-top: 18px;
+  border-top: 1px solid var(--color-border);
+}
+
+.testimonial-card .card-tag {
+  position: absolute;
+  top: 22px;
+  right: 22px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  background: var(--color-accent-dim);
+  padding: 5px 10px;
+  border-radius: 999px;
+}
+
+.testi-grid-empty {
+  display: none;
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--color-text-dim);
+  font-size: 1rem;
+}
+.testi-grid-empty.show { display: block; }
+
+.testi-load-more { display: flex; justify-content: center; margin-top: 44px; }
+
+@media (max-width: 1080px) { .testi-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px) { .testi-grid { grid-template-columns: 1fr; } }
+
+/* --------------------------------------------------------------------------
+   4. STATS BAND
+   -------------------------------------------------------------------------- */
+.testi-stats {
+  padding: 70px 0;
+  /* Same fight as .testi-hero above — !important required to beat the
+     sitewide forced-transparent rule on <section>. */
+  background: linear-gradient(180deg, var(--bg-master-end), var(--bg-master)) !important;
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  transition: background-color 0.35s var(--ease-out), border-color 0.35s var(--ease-out);
+}
+
+/* The reused .collaboration-section (client marquee + featured slider) is
+   also a <section> in main.css, so its own background-color: var(--color-surface)
+   never actually painted — it was being wiped by the same !important rule
+   sitewide. Scoped override here so it shows correctly on this page. */
+.collaboration-section {
+  
+  transition: background-color 0.35s var(--ease-out);
+}
+
+.testi-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  text-align: center;
+}
+
+.testi-stat { display: flex; flex-direction: column; gap: 6px; }
+
+.testi-stat-num {
+  font-size: clamp(2.1rem, 4vw, 3rem);
+  font-weight: 800;
+  color: var(--color-text);
+  letter-spacing: -0.02em;
+}
+
+.testi-stat-num.is-accent { color: var(--color-accent); }
+
+.testi-stat-label {
+  font-size: 0.8rem;
+  color: var(--color-text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+@media (max-width: 768px) { .testi-stats-grid { grid-template-columns: repeat(2, 1fr); gap: 34px; } }
+
+/* --------------------------------------------------------------------------
+   5. CTA BANNER
+   Reuses .btn-hero (inner-pages.css) for the button itself.
+   -------------------------------------------------------------------------- */
+.testi-cta { padding: 90px 0; position: relative; overflow: hidden; }
+
+.testi-cta::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(900px 380px at 50% 0%, var(--color-accent-dim), transparent 65%);
+  pointer-events: none;
+}
+
+.testi-cta-inner { position: relative; z-index: 2; text-align: center; max-width: 640px; margin: 0 auto; }
+
+.testi-cta-title {
+  font-size: clamp(1.9rem, 3.4vw, 2.6rem);
+  font-weight: 700;
+  color: var(--color-text);
+  letter-spacing: -0.015em;
+}
+
+.testi-cta-text {
+  margin: 14px 0 30px;
+  color: var(--color-text-muted);
+  font-size: 1.02rem;
+  line-height: 1.6;
+}
+
+/* --------------------------------------------------------------------------
+   6. SCROLL REVEAL — extends inner-pages.css's entrance engine
+   (.scroll-trigger-left / .scroll-trigger-right / .is-revealed) with an
+   upward variant for grids and bands, using the same naming convention.
+   -------------------------------------------------------------------------- */
+.scroll-trigger-up {
+  opacity: 0;
+  transform: translateY(28px);
+  will-change: transform, opacity;
+  transition: opacity 0.75s var(--ease-out), transform 0.75s var(--ease-out);
+}
+
+.scroll-trigger-up.is-revealed { opacity: 1; transform: none; }
+
+/* Staggers children of the grid slightly so cards don't all pop at once. */
+.testi-grid .scroll-trigger-up:nth-child(2) { transition-delay: 0.06s; }
+.testi-grid .scroll-trigger-up:nth-child(3) { transition-delay: 0.12s; }
+.testi-grid .scroll-trigger-up:nth-child(4) { transition-delay: 0.06s; }
+.testi-grid .scroll-trigger-up:nth-child(5) { transition-delay: 0.12s; }
+.testi-grid .scroll-trigger-up:nth-child(6) { transition-delay: 0.18s; }
+
+/* --------------------------------------------------------------------------
+   7. MOTION SAFETY
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .scroll-trigger-up, .testimonial-card, .testi-hero-stat {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
